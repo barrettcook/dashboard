@@ -43,7 +43,8 @@ function refreshImage() {
             imagesrc = imagesrc.replace(/graph_end=\d+/, new_end);
         }
 
-        document.images[image_index].src = imagesrc;
+        rand = Math.floor(new Date().getTime() / 1000);
+        document.images[image_index].src = imagesrc + '&rand=' + rand;
     }
 
     image_index++;
