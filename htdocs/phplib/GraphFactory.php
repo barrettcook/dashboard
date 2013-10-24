@@ -263,6 +263,9 @@ class GraphFactory {
             $source = isset($metric['source']) ? $metric['source'] : null;
             $node = isset($metric['node']) ? $metric['node'] : null;
             $datum = isset($metric['datum']) ? $metric['datum'] : null;
+            if (isset($metric['regex'])) {
+                $node = array('regex' => $metric['regex']);
+            }
 
             if ($is_report) {
                 $g->addReport($source, $node, $datum);

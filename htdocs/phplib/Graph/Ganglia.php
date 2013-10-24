@@ -10,6 +10,7 @@ class Graph_Ganglia {
     protected $params = array(
         'metric' => '', 'graph' => '', 'cluster' => '',
         'hostname' => '', 'title' => '', 'vlabel' => '',
+        'host_regex' => '',
     );
 
     public function __construct($time, $until=null) {
@@ -37,7 +38,11 @@ class Graph_Ganglia {
     public function addReport($cluster, $host, $metric, $title = '', $vlabel = '', $nolegend = '') {
         $this->params['cluster'] = $cluster;
         $this->params['graph'] = $metric; // uses 'graph' instead of 'metric'
-        $this->params['hostname'] = $host;
+        if (is_array($host)) {
+            $this->params['host_regex'] = $host['regex'];
+        } else {
+            $this->params['hostname'] = $host;
+        }
         $this->params['title'] = $title;
         $this->params['vlabel'] = $vlabel;
         $this->params['nolegend'] = $nolegend;
@@ -49,7 +54,11 @@ class Graph_Ganglia {
      */
     public function addMetric($cluster, $host, $metric, $title = '', $vlabel = '', $nolegend = '') {
         $this->params['cluster'] = $cluster;
-        $this->params['hostname'] = $host;
+        if (is_array($host)) {
+            $this->params['host_regex'] = $host['regex'];
+        } else {
+            $this->params['hostname'] = $host;
+        }
         $this->params['metric'] = $metric;
         $this->params['title'] = $title;
         $this->params['vlabel'] = $vlabel;
@@ -114,6 +123,9 @@ class Graph_Ganglia {
         if ($this->params['hostname']) {
             $p['h'] = $this->params['hostname'];
         }
+        if ($this->params['host_regex']) {
+            $p['host_regex'] = $this->params['host_regex'];
+        }
         if ($this->params['title']) {
             $p['ti'] = $this->params['title'];
         }
@@ -158,6 +170,9 @@ class Graph_Ganglia {
             $p['r'] = $this->getTimeParam($this->time);
             $p['c'] = $this->params['cluster'];
             $p['m'] = $this->params['metric'];
+            if ($this->params['host_regex']) {
+                $p['host_regex'] = $this->params['host_regex'];
+            }
             return $this->url . '?'
                    . http_build_query($p);
         }
