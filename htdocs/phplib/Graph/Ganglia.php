@@ -74,15 +74,22 @@ class Graph_Ganglia {
     }
 
     public function getTimeParam($time) {
-        $units = array('h' => 'hours',
-                       'd' => 'days',
-                       'w' => 'weeks',
-                       'm' => 'months',
-                       'y' => 'years',
+        $units = array(
+            'h' => 'hr',
+            'd' => 'day',
+            'w' => 'week',
+            'm' => 'month',
+            'y' => 'year',
         );
         if(preg_match("/^(\d+)([a-z])/", strtolower($time), $m)) {
+            if ($m[1] == 1 && $m[2] == 'h') {
+                return 'hour';
+            }
             $quantity = $m[1];
-            return $m[1] . $units[$m[2]];
+            if ($quantity > 1) {
+                return $m[1] . $units[$m[2]];
+            }
+            return $units[$m[2]];
         } else {
             return $time;
         }
